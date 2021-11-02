@@ -69,6 +69,7 @@ def _draw_indexes(num, fac, weights):
         num_to_add = num - len(idx)
 
         if num_to_add > len(weights):
+            print(num_to_add, weights)
             raise RuntimeError(
                 'There is a mismatch between the constraints and the total '
                 'number of households to draw. The total to draw appears '
