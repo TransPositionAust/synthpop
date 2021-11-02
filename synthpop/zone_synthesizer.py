@@ -80,13 +80,16 @@ def synthesize_all_zones(hh_marg, p_marg, hh_sample, p_sample, xwalk):
     hh_list = []
     people_list = []
     stats_list = []
+    jd_list = []
     hh_index_start = 1
     for geogs in xwalk:
-        households, people, stats = synthesize_zone(hh_marg, p_marg,
+        print(geogs)
+        households, people, stats, h_jd, p_jd = synthesize_zone(hh_marg, p_marg,
                                                     hh_sample, p_sample, geogs)
         stats_list.append(stats)
         hh_list.append(households)
         people_list.append(people)
+        jd_list.append((h_jd, p_jd))
 
         if len(households) > 0:
             hh_index_start = households.index.values[-1] + 1
@@ -94,7 +97,9 @@ def synthesize_all_zones(hh_marg, p_marg, hh_sample, p_sample, xwalk):
     all_persons = pd.concat(people_list)
     all_households, all_persons = synch_hhids(all_households, all_persons)
     all_stats = pd.DataFrame(stats_list)
-    return all_households, all_persons, all_stats
+    all_jd = pd.DataFrame(jd_list)
+
+    return all_households, all_persons, all_stats, all_jd
 
 
 def synch_hhids(households, persons):
@@ -162,7 +167,7 @@ def synthesize_zone(hh_marg, p_marg, hh_sample, p_sample, xwalk):
     households['geog'] = xwalk[0]
     people['geog'] = xwalk[0]
     stats = {'geog': xwalk[0], 'chi-square': people_chisq, 'p-score': people_p}
-    return households, people, stats
+    return households, people, stats, hh_jd, p_jd
 
 
 def multiprocess_synthesize(hh_marg, p_marg, hh_sample,

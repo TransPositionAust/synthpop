@@ -27,7 +27,7 @@ def enable_logging():
 
 def synthesize(h_marg, p_marg, h_jd, p_jd, h_pums, p_pums, geography, ignore_max_iters,
                marginal_zero_sub=.01, jd_zero_sub=.001, hh_index_start=0):
-
+    # enable_logging()
     # this is the zero marginal problem
     h_marg = h_marg.replace(0, marginal_zero_sub)
     p_marg = p_marg.replace(0, marginal_zero_sub)
