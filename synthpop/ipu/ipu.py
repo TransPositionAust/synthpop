@@ -167,7 +167,7 @@ def _average_fit_quality(freq_wrap, weights):
     ) / freq_wrap.ncols
 
 
-def _update_weights(column, weights, constraint):
+def _update_weights(colname, column, weights, constraint):
     """
     Update household weights based on a single column.
 
@@ -190,7 +190,10 @@ def _update_weights(column, weights, constraint):
     new_weights : ndarray
 
     """
-    adj = constraint / float((column * weights).sum())
+    val=float((column * weights).sum())
+    if val==0:
+        return weights # I guess we just don't do any adjustment??
+    adj = constraint / val
     return weights * adj
 
 
@@ -249,8 +252,8 @@ def household_weights(
     iterations = 0
 
     while fit_change > convergence:
-        for _, col, constraint, nz in freq_wrap.iter_columns():
-            weights[nz] = _update_weights(col, weights[nz], constraint)
+        for colname, col, constraint, nz in freq_wrap.iter_columns():
+            weights[nz] = _update_weights(colname, col, weights[nz], constraint)
 
         new_fit_qual = _average_fit_quality(freq_wrap, weights)
         fit_change = abs(new_fit_qual - fit_qual)
